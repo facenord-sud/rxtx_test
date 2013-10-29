@@ -22,48 +22,26 @@ import java.util.logging.Logger;
 public abstract class ArduinoCommunication {
 
     private RxtxConnection connection;
-    private String json;
-    private Gson gson;
+    private final Gson gson;
 
     public ArduinoCommunication() {
         gson = new Gson();
         try {
             connection = RxtxConnection.getInstance();
-            addNewDataListener();
         } catch (PortInUseException ex) {
             Logger.getLogger(ArduinoCommunication.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnsupportedCommOperationException ex) {
             Logger.getLogger(ArduinoCommunication.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(ArduinoCommunication.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (TooManyListenersException ex) {
-            Logger.getLogger(ArduinoCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    private void addNewDataListener() throws TooManyListenersException {
-        connection.getSerialPort().addEventListener(new SerialPortEventListener() {
-
-                @Override
-                public void serialEvent(SerialPortEvent spEvent) {
-                    if (spEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
-                        try {
-                            String line = connection.getInput().readLine();
-                            if (!line.equals("")) {
-                                json = line;
-                            }
-                        } catch (IOException e) {
-                            Logger.getLogger(ArduinoCommunication.class.getName()).log(Level.SEVERE, "IO exception. Are you closing ?", e);
-                        }
-                    }
-                }
-            });
-            connection.getSerialPort().notifyOnDataAvailable(true);
-    }
+    
     
     public void write(Object o) {
         try {
-            connection.getOutput().writeChars(gson.toJson(o));
+            connection.getOutput().write(gson.toJson(o).getBytes());
         } catch (IOException ex) {
             Logger.getLogger(ArduinoCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -73,8 +51,17 @@ public abstract class ArduinoCommunication {
 
     public abstract <T> T getComponent();
 
-    public String getJson() {
-        return json;
+    public RxtxConnection getConnection() {
+        return connection;
     }
+
+    public void setConnection(RxtxConnection connection) {
+        this.connection = connection;
+    }
+
+    public Gson getGson() {
+        return gson;
+    }
+    
     
 }

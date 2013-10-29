@@ -7,10 +7,15 @@ import java.io.OutputStream;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
+import gnu.io.SerialPortEvent;
+import gnu.io.SerialPortEventListener;
 import gnu.io.UnsupportedCommOperationException;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.TooManyListenersException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -41,7 +46,7 @@ public class RxtxConnection {
     /**
      * The output stream to the port
      */
-    private DataOutputStream output;
+    private OutputStream output;
     /**
      * Milliseconds to block while waiting for port open
      */
@@ -54,6 +59,8 @@ public class RxtxConnection {
     private static RxtxConnection instance = null;
     
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(RxtxConnection.class);
+    
+    private String line;
 
     private RxtxConnection() throws PortInUseException, UnsupportedCommOperationException, IOException {
         initialize();
@@ -99,9 +106,34 @@ public class RxtxConnection {
 
             // open the streams
             input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-            output = (DataOutputStream)serialPort.getOutputStream();
-
+            output = serialPort.getOutputStream();
+        try {
+            addNewDataListener();
+        } catch (TooManyListenersException ex) {
+            Logger.getLogger(RxtxConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
+    }
+    
+    private void addNewDataListener() throws TooManyListenersException {
+        serialPort.addEventListener(new SerialPortEventListener() {
+
+                @Override
+                public void serialEvent(SerialPortEvent spEvent) {
+                    if (spEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+                        try {
+                            String _line = input.readLine();
+                            if (!_line.equals("")) {
+                                line = _line;
+                            }
+                            logger.error("ça modifie"+_line);
+                        } catch (IOException e) {
+                            Logger.getLogger(ArduinoCommunication.class.getName()).log(Level.SEVERE, "IO exception. Are you closing ?", e);
+                        }
+                    }
+                }
+            });
+            serialPort.notifyOnDataAvailable(true);
     }
 
     /**
@@ -123,8 +155,12 @@ public class RxtxConnection {
         return input;
     }
 
-    public DataOutputStream getOutput() {
+    public OutputStream getOutput() {
         return output;
+    }
+
+    public String getLine() {
+        return line;
     }
 
 }

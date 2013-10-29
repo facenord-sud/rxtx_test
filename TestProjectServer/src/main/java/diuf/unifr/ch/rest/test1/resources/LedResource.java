@@ -5,18 +5,21 @@
  */
 package diuf.unifr.ch.rest.test1.resources;
 
+
 import diuf.unifr.ch.rest.test1.pojo.Led;
+import diuf.unifr.ch.rest.test1.rxtx.ArduinoCommunication;
 import diuf.unifr.ch.rest.test1.rxtx.RxtxConnection;
-import gnu.io.PortInUseException;
-import gnu.io.UnsupportedCommOperationException;
-import java.io.IOException;
+import diuf.unifr.ch.rest.test1.rxtx.SimpleLed;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -24,10 +27,24 @@ import javax.ws.rs.core.Response;
  */
 @Path("/led")
 public class LedResource {
+    private String s = "{\"isBlinking\":true,\"isLighting\":false,\"isOn\":false}";
+    private final SimpleLed hLed = new SimpleLed();
+    private static final Logger logger = LoggerFactory.getLogger(LedResource.class);
 
     @GET
     @Produces(MediaType.APPLICATION_XML)
     public Response getLed() {
-        return Response.ok().build();
+        logger.error("get");
+        Led l = hLed.getComponent();
+        return Response.ok(l).build();
+    }
+    
+    @PUT
+    @Produces(MediaType.APPLICATION_XML)
+    @Consumes(MediaType.APPLICATION_XML)
+    public Response setLed(Led led) {
+        logger.error("put");
+        hLed.setComponent(led);
+        return Response.ok(led).build();
     }
 }

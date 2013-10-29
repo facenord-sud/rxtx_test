@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package diuf.unifr.ch.rest.test1.rxtx;
 
 /**
  *
  * @author leo
  */
-public enum TinkerKitShield {
-
+public enum TinkerShield {
     o_0(11),
     o_1(10),
     o_2(9),
@@ -24,11 +24,13 @@ public enum TinkerKitShield {
     i_4(18),
     i_5(19);
     
-
-    private final int value;
-
-    private TinkerKitShield(int value) {
+    private int value;
+    
+    private TinkerShield(int value) {
         this.value = value;
     }
-
+    
+    public int getValue() {
+        return value;
+    }
 }

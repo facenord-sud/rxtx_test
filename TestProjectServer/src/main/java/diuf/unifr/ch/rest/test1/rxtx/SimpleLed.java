@@ -22,7 +22,7 @@ public class SimpleLed extends ArduinoCommunication {
 
     @Override
     public Led getComponent() {
-        Led led = getGson().fromJson(getJson(), Led.class);
+        Led led = getGson().fromJson(getConnection().getLine(), Led.class);
         return led;
     }
     

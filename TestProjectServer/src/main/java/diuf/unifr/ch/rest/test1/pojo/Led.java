@@ -6,6 +6,7 @@
 
 package diuf.unifr.ch.rest.test1.pojo;
 
+import diuf.unifr.ch.rest.test1.rxtx.TinkerShield;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -17,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Led {
     
-    private int pin;
+    private final int pin = TinkerShield.o_2.getValue();
     private boolean isBlinking;
     private boolean isLighting;
     private boolean isOn;
