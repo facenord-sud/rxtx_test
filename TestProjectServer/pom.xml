@@ -14,22 +14,23 @@
 
     <description>SlowLPLServer is a Web interface for the LPL Solver using SlowREST
 
-    Usage: mvn clean package to create the war package which then can be deployed to an Appliation Server. On the server side
-    there needs to be a Connection Pool and a jdbc connection with name "SlowLPL"
+        Usage: mvn clean package to create the war package which then can be deployed to an Appliation Server. On the server side
+        there needs to be a Connection Pool and a jdbc connection with name "SlowLPL"
     
-    Another way to configure Glassfish for deploying this project is to checkout the source code and copy the file src/test/resources/org/glassfish/embed/domain.xml
-    to !!_glassfish-installation_!!/glassfish/domains/!!_free-domain-name_!!/config/ and then start this domain with:
-    !!_glassfish-installation_!!/bin/asadmin start-domain !!_free-domain-name_!!
+        Another way to configure Glassfish for deploying this project is to checkout the source code and copy the file src/test/resources/org/glassfish/embed/domain.xml
+        to !!_glassfish-installation_!!/glassfish/domains/!!_free-domain-name_!!/config/ and then start this domain with:
+        !!_glassfish-installation_!!/bin/asadmin start-domain !!_free-domain-name_!!
 
-    mvn site generates the webpage of the project.
+        mvn site generates the webpage of the project.
 
-    mvn verify does the integration-tests. They are based on a instance of embedded glassfish. The used database behind the JDBC
-    connection is an in memory database. This way we don't have to handle with a special database. Integration Test Classes are
-    placed in the same folder as JUnit test but they have to be named as follows: *ITCase.java
+        mvn verify does the integration-tests. They are based on a instance of embedded glassfish. The used database behind the JDBC
+        connection is an in memory database. This way we don't have to handle with a special database. Integration Test Classes are
+        placed in the same folder as JUnit test but they have to be named as follows: *ITCase.java
 
-    mvn test only executes the JUnit test.</description>
+        mvn test only executes the JUnit test.</description>
 
     <repositories>
+        
         <repository>
             <id>maven2-repository.dev.java.net</id>
             <name>Java.net Repository for Maven</name>
@@ -52,7 +53,9 @@
             <id>morphia.googlecode.com</id>
             <name>Morphia Repo at Google Code</name>
             <url>http://morphia.googlecode.com/svn/mavenrepo/</url>
-            <snapshots><enabled>false</enabled></snapshots>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
         <repository>
             <id>Sonatype</id>
@@ -93,6 +96,25 @@
             <scope>runtime</scope>
         </dependency>
         -->
+        
+        <!--  Gson: Java to Json conversion and vice versa -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.2.4</version>
+            <scope>compile</scope>
+        </dependency>
+        
+        <!--rxtx library-->
+        <dependency>
+            <groupId>org.rxtx</groupId>
+            <artifactId>rxtx</artifactId>
+            <version>2.2pre2</version>
+            <type>so</type>
+            <classifier>bin</classifier>
+            <scope>runtime</scope>
+        </dependency>
+        
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -197,7 +219,7 @@
             <version>5.1.13</version>
         </dependency>
         
-         <!-- Contains the morphia DB -->
+        <!-- Contains the morphia DB -->
         
         <dependency>
             <groupId>com.google.code.morphia</groupId>
@@ -254,6 +276,28 @@
             </resource>
         </resources>
         <plugins>
+            
+            <!--rxtx plugin-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2</version>
+                <inherited>false</inherited>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assemblies/distribution.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -309,8 +353,8 @@
                 <version>${jetty-version}</version>
                 <configuration>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
-		    <stopPort>9966</stopPort>
-		    <stopKey>STOP</stopKey>
+                    <stopPort>9966</stopPort>
+                    <stopKey>STOP</stopKey>
                     <webApp>
                         <contextPath>/${project.name}</contextPath>
                         <descriptor>${project.build.directory}/web.xml</descriptor>
