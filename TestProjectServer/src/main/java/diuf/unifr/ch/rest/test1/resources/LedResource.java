@@ -27,15 +27,14 @@ import org.slf4j.LoggerFactory;
  */
 @Path("/led")
 public class LedResource {
-    private String s = "{\"isBlinking\":true,\"isLighting\":false,\"isOn\":false}";
-    private final SimpleLed hLed = new SimpleLed();
+    
     private static final Logger logger = LoggerFactory.getLogger(LedResource.class);
 
     @GET
     @Produces(MediaType.APPLICATION_XML)
     public Response getLed() {
-        logger.error("get");
-        Led l = hLed.getComponent();
+        logger.debug("get");
+        Led l = new SimpleLed().getComponent();
         return Response.ok(l).build();
     }
     
@@ -43,8 +42,8 @@ public class LedResource {
     @Produces(MediaType.APPLICATION_XML)
     @Consumes(MediaType.APPLICATION_XML)
     public Response setLed(Led led) {
-        logger.error("put");
-        hLed.setComponent(led);
+        logger.debug("put");
+        new SimpleLed().setComponent(led);
         return Response.ok(led).build();
     }
 }

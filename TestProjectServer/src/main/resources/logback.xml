@@ -8,7 +8,7 @@
   </appender>
    
   <logger name="org.atmosphere.jersey" level="INFO"/>
-  <logger name="ch.unifr.diuf.softeng" level="INFO" />
+  <logger name="ch.unifr.diuf.softeng" level="ALL" />
  
   <root level="INFO">
     <appender-ref ref="STDOUT" />

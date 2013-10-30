@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.TooManyListenersException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -23,6 +24,7 @@ public abstract class ArduinoCommunication {
 
     private RxtxConnection connection;
     private final Gson gson;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ArduinoCommunication.class);
 
     public ArduinoCommunication() {
         gson = new Gson();
@@ -42,6 +44,7 @@ public abstract class ArduinoCommunication {
     public void write(Object o) {
         try {
             connection.getOutput().write(gson.toJson(o).getBytes());
+            logger.debug("writing to arduino : "+ gson.toJson(o));
         } catch (IOException ex) {
             Logger.getLogger(ArduinoCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }

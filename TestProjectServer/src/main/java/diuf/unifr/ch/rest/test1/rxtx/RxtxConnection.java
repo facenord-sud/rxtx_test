@@ -32,7 +32,8 @@ public class RxtxConnection {
      * The port we're normally going to use.
      */
     private static final String PORT_NAMES[] = {
-        "/dev/tty.usbmodem1421", // Mac OS X
+        "/dev/tty.usbmodem1421",// Mac OS X 10.8
+        "/dev/tty.usbmodem1411",// Mac OS X 10.9
         "/dev/ttyUSB0", // Linux
         "COM3", // Windows
     };
@@ -69,7 +70,7 @@ public class RxtxConnection {
     public static RxtxConnection getInstance() throws PortInUseException, UnsupportedCommOperationException, IOException {
         if (instance == null) {
             instance = new RxtxConnection();
-            logger.trace("Connection initialized");
+            logger.debug("Connection initialized");
         }
         return instance;
     }
@@ -89,9 +90,9 @@ public class RxtxConnection {
             }
         }
         if (portId == null) {
-            System.out.println("Could not find COM port.");
+            logger.error("Could not find COM port.");
             close();
-            System.exit(0);
+            return;
         }
 
             // open serial port, and use class name for the appName.
@@ -126,11 +127,12 @@ public class RxtxConnection {
                             if (!_line.equals("")) {
                                 line = _line;
                             }
-                            logger.error("ça modifie"+_line);
+                            logger.debug("valeure renvoyée : "+_line);
                         } catch (IOException e) {
-                            Logger.getLogger(ArduinoCommunication.class.getName()).log(Level.SEVERE, "IO exception. Are you closing ?", e);
+                            logger.error("IO exception. Are you closing ?", e);
                         }
                     }
+                    logger.debug("notification listener");
                 }
             });
             serialPort.notifyOnDataAvailable(true);
