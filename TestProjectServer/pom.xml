@@ -64,6 +64,17 @@
             <snapshots>
             </snapshots>
         </repository>
+        
+        <!--rxtx rebundled-->
+        <repository>
+            <id>root1-releases</id>
+            <name>root1.de Releases Repository</name>
+            <layout>default</layout>
+            <url>http://nexus.root1.de/content/repositories/releases/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
         <!-- For the WADL part -->
         <!--
         <repository>
@@ -106,13 +117,20 @@
         </dependency>
         
         <!--rxtx library-->
-        <dependency>
+<!--        <dependency>
             <groupId>org.rxtx</groupId>
             <artifactId>rxtx</artifactId>
             <version>2.2pre2</version>
             <type>so</type>
             <classifier>bin</classifier>
             <scope>runtime</scope>
+        </dependency>-->
+        
+        <!--rxtx rebundled-->
+        <dependency>
+            <groupId>de.root1</groupId>
+            <artifactId>rxtx-rebundled</artifactId>
+            <version>2.1-7r2-1</version>
         </dependency>
         
         <dependency>
