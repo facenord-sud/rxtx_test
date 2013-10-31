@@ -35,6 +35,9 @@ public class RxtxConnection {
         "/dev/tty.usbmodem1411",// Mac OS X 10.9
         "/dev/ttyUSB0", // Linux
         "/dev/ttyACM0", // debian/raspbian
+        "/dev/ttyAMA0", // debian/raspbian
+        "/dev/ttyprintk", // debian/raspbian
+        "/dev/tty", // debian/raspbian
         "COM3", // Windows
     };
 
@@ -89,8 +92,16 @@ public class RxtxConnection {
         //First, Find an instance of serial port as set in PORT_NAMES.
         while (portEnum.hasMoreElements()) {
             CommPortIdentifier currPortId = (CommPortIdentifier) portEnum.nextElement();
+            logger.debug("search corresspondig port for : "+currPortId.getName()+" with owner : "+currPortId.getCurrentOwner());
             for (String portName : PORT_NAMES) {
                 if (currPortId.getName().equals(portName)) {
+                    portId = currPortId;
+                    break;
+                }
+            }
+            for(int i=0;i<100;i++) {
+                String name = "/dev/tty"+i;
+                if (currPortId.getName().equals(name)) {
                     portId = currPortId;
                     break;
                 }
