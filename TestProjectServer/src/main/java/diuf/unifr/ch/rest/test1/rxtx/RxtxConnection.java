@@ -1,6 +1,6 @@
 package diuf.unifr.ch.rest.test1.rxtx;
 
-import diuf.unifr.ch.rest.test1.resources.MyResource;
+import diuf.unifr.ch.rest.test1.rxtx.exception.PortNotFoundException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -10,7 +10,6 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import gnu.io.UnsupportedCommOperationException;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.TooManyListenersException;
@@ -58,24 +57,29 @@ public class RxtxConnection {
     private static final int DATA_RATE = 9600;
 
     private static RxtxConnection instance = null;
-    
+
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(RxtxConnection.class);
-    
+
     private String line;
 
     private RxtxConnection() throws PortInUseException, UnsupportedCommOperationException, IOException {
-        initialize();
     }
 
     public static RxtxConnection getInstance() throws PortInUseException, UnsupportedCommOperationException, IOException {
-        if (instance == null) {
-            instance = new RxtxConnection();
-            logger.debug("Connection initialized");
+
+        try {
+            if (instance == null) {
+                instance = new RxtxConnection();
+                instance.initialize();
+                logger.debug("Connection initialized");
+            }
+        } catch (PortNotFoundException e) {
+            instance = null;
         }
         return instance;
     }
 
-    private void initialize() throws PortInUseException, UnsupportedCommOperationException, IOException {
+    private void initialize() throws PortInUseException, UnsupportedCommOperationException, IOException, PortNotFoundException {
         CommPortIdentifier portId = null;
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 
@@ -92,50 +96,50 @@ public class RxtxConnection {
         if (portId == null) {
             logger.error("Could not find COM port.");
             close();
-            return;
+            throw new PortNotFoundException();
         }
 
-            // open serial port, and use class name for the appName.
-            serialPort = (SerialPort) portId.open(this.getClass().getName(),
-                    TIME_OUT);
+        // open serial port, and use class name for the appName.
+        serialPort = (SerialPort) portId.open(this.getClass().getName(),
+                TIME_OUT);
 
-            // set port parameters
-            serialPort.setSerialPortParams(DATA_RATE,
-                    SerialPort.DATABITS_8,
-                    SerialPort.STOPBITS_1,
-                    SerialPort.PARITY_NONE);
+        // set port parameters
+        serialPort.setSerialPortParams(DATA_RATE,
+                SerialPort.DATABITS_8,
+                SerialPort.STOPBITS_1,
+                SerialPort.PARITY_NONE);
 
-            // open the streams
-            input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-            output = serialPort.getOutputStream();
+        // open the streams
+        input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+        output = serialPort.getOutputStream();
         try {
             addNewDataListener();
         } catch (TooManyListenersException ex) {
             Logger.getLogger(RxtxConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
+
     private void addNewDataListener() throws TooManyListenersException {
         serialPort.addEventListener(new SerialPortEventListener() {
 
-                @Override
-                public void serialEvent(SerialPortEvent spEvent) {
-                    if (spEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
-                        try {
-                            String _line = input.readLine();
-                            if (!_line.equals("")) {
-                                line = _line;
-                            }
-                            logger.debug("valeure renvoyée : "+_line);
-                        } catch (IOException e) {
-                            logger.error("IO exception. Are you closing ?", e);
+            @Override
+            public void serialEvent(SerialPortEvent spEvent) {
+                if (spEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+                    try {
+                        String _line = input.readLine();
+                        if (!_line.equals("")) {
+                            line = _line;
                         }
+                        logger.debug("valeure renvoyée : " + _line);
+                    } catch (IOException e) {
+                        logger.error("IO exception. Are you closing ?", e);
                     }
-                    logger.debug("notification listener");
                 }
-            });
-            serialPort.notifyOnDataAvailable(true);
+                logger.debug("notification listener");
+            }
+        });
+        serialPort.notifyOnDataAvailable(true);
     }
 
     /**
