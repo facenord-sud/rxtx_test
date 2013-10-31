@@ -88,11 +88,11 @@ public class RxtxConnection {
     private void initialize() throws PortInUseException, UnsupportedCommOperationException, IOException, PortNotFoundException {
         CommPortIdentifier portId = null;
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
-
+        logger.error("looking for ports");
         //First, Find an instance of serial port as set in PORT_NAMES.
         while (portEnum.hasMoreElements()) {
             CommPortIdentifier currPortId = (CommPortIdentifier) portEnum.nextElement();
-            logger.debug("search corresspondig port for : "+currPortId.getName()+" with owner : "+currPortId.getCurrentOwner());
+            logger.error("search corresspondig port for : "+currPortId.getName()+" with owner : "+currPortId.getCurrentOwner());
             for (String portName : PORT_NAMES) {
                 if (currPortId.getName().equals(portName)) {
                     portId = currPortId;
