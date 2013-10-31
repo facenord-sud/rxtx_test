@@ -34,7 +34,7 @@ public class RxtxConnection {
         "/dev/tty.usbmodem1421",// Mac OS X 10.8
         "/dev/tty.usbmodem1411",// Mac OS X 10.9
         "/dev/ttyUSB0", // Linux
-        "/dev/ttyACM0", // Linux
+        "/dev/ttyACM0", // debian/raspbian
         "COM3", // Windows
     };
 
@@ -74,10 +74,12 @@ public class RxtxConnection {
                 instance.initialize();
                 logger.debug("Connection initialized");
             }
+            return instance;
         } catch (PortNotFoundException e) {
             instance = null;
+            return new RxtxConnection();
         }
-        return instance;
+
     }
 
     private void initialize() throws PortInUseException, UnsupportedCommOperationException, IOException, PortNotFoundException {

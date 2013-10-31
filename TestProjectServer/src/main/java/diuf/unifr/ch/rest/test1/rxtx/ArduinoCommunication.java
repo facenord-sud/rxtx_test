@@ -36,8 +36,6 @@ public abstract class ArduinoCommunication {
             Logger.getLogger(ArduinoCommunication.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(ArduinoCommunication.class.getName()).log(Level.SEVERE, null, ex);
-        } catch(NullPointerException e) {
-            logger.error("null instance of rxtxConnection");
         }
     }
     
