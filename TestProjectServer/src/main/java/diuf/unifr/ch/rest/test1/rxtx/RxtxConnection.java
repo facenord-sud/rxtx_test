@@ -107,6 +107,7 @@ public class RxtxConnection {
                 }
             }
         }
+        logger.error("end of search for ports");
         if (portId == null) {
             logger.error("Could not find COM port.");
             close();
