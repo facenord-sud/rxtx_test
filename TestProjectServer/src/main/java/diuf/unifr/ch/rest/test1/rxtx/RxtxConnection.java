@@ -89,6 +89,11 @@ public class RxtxConnection {
         CommPortIdentifier portId = null;
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
         logger.error("looking for ports");
+        if(portEnum.hasMoreElements()) {
+            logger.error("il y a des ports");
+        } else {
+            logger.error("il n'y en a pas.");
+        }
         //First, Find an instance of serial port as set in PORT_NAMES.
         while (portEnum.hasMoreElements()) {
             CommPortIdentifier currPortId = (CommPortIdentifier) portEnum.nextElement();
