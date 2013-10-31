@@ -34,6 +34,7 @@ public class RxtxConnection {
         "/dev/tty.usbmodem1421",// Mac OS X 10.8
         "/dev/tty.usbmodem1411",// Mac OS X 10.9
         "/dev/ttyUSB0", // Linux
+        "/dev/ttyACM0", // Linux
         "COM3", // Windows
     };
 
