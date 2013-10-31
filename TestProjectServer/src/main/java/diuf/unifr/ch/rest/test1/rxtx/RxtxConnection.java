@@ -37,7 +37,7 @@ public class RxtxConnection {
         "/dev/ttyACM0", // debian/raspbian
         "/dev/ttyAMA0", // debian/raspbian
         "/dev/ttyprintk", // debian/raspbian
-        "/dev/tty", // debian/raspbian
+        "/dev/ttyS1", // debian/raspbian
         "COM3", // Windows
     };
 
@@ -100,13 +100,6 @@ public class RxtxConnection {
             logger.error("search corresspondig port for : "+currPortId.getName()+" with owner : "+currPortId.getCurrentOwner());
             for (String portName : PORT_NAMES) {
                 if (currPortId.getName().equals(portName)) {
-                    portId = currPortId;
-                    break;
-                }
-            }
-            for(int i=0;i<100;i++) {
-                String name = "/dev/tty"+i;
-                if (currPortId.getName().equals(name)) {
                     portId = currPortId;
                     break;
                 }
