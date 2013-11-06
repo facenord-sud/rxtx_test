@@ -6,7 +6,7 @@
 package diuf.unifr.ch.rest.test1.resources;
 
 
-import diuf.unifr.ch.rest.test1.pojo.Led;
+import diuf.unifr.ch.rest.test1.jaxb.Led;
 import diuf.unifr.ch.rest.test1.rxtx.ArduinoCommunication;
 import diuf.unifr.ch.rest.test1.rxtx.RxtxConnection;
 import diuf.unifr.ch.rest.test1.rxtx.SimpleLed;

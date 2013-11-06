@@ -6,13 +6,23 @@
 
 package diuf.unifr.ch.rest.test1.rxtx;
 
-import diuf.unifr.ch.rest.test1.pojo.Led;
+import com.google.gson.reflect.TypeToken;
+import diuf.unifr.ch.rest.test1.jaxb.AbstractComponent;
+import diuf.unifr.ch.rest.test1.jaxb.Led;
+import diuf.unifr.ch.rest.test1.resources.LedResource;
+import java.lang.reflect.Type;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author leo
  */
 public class SimpleLed extends ArduinoCommunication {
+    
+    private static final Logger logger = LoggerFactory.getLogger(SimpleLed.class);
 
     @Override
     public void setComponent(Object o) {
@@ -22,8 +32,8 @@ public class SimpleLed extends ArduinoCommunication {
 
     @Override
     public Led getComponent() {
-        Led led = getGson().fromJson(getConnection().getLine(), Led.class);
-        return led;
+        logger.error(getConnection().getLine());
+        return null;
     }
     
 }

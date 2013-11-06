@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package diuf.unifr.ch.rest.test1.pojo;
+package diuf.unifr.ch.rest.test1.jaxb;
 
 import diuf.unifr.ch.rest.test1.rxtx.TinkerShield;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -16,17 +16,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author leo
  */
 @XmlRootElement
-public class Led {
+public class Led extends AbstractComponent{
     
-    private final int pin = TinkerShield.o_2.getValue();
     private boolean isBlinking;
     private boolean isLighting;
     private boolean isOn;
-    
-    @XmlAttribute
-    public int getPin() {
-        return pin;
-    }
     
     @XmlElement
     public boolean isIsBlinking() {

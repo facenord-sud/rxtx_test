@@ -90,7 +90,7 @@ public class RxtxConnection {
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
         logger.debug("looking for ports...");
         if(portEnum.hasMoreElements()) {
-            logger.error("serial port(s) found on your os");
+            logger.debug("serial port(s) found on your os");
         } else {
             logger.error("No port found. Linux user: don't forget that only ports like this: /dev/ttyS* will be scanned");
         }
