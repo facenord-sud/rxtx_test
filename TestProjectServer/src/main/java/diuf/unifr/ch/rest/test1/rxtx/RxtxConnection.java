@@ -88,16 +88,15 @@ public class RxtxConnection {
     private void initialize() throws PortInUseException, UnsupportedCommOperationException, IOException, PortNotFoundException {
         CommPortIdentifier portId = null;
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
-        logger.error("looking for ports");
+        logger.debug("looking for ports...");
         if(portEnum.hasMoreElements()) {
-            logger.error("il y a des ports");
+            logger.error("serial port(s) found on your os");
         } else {
-            logger.error("il n'y en a pas.");
+            logger.error("No port found. Linux user: don't forget that only ports like this: /dev/ttyS* will be scanned");
         }
         //First, Find an instance of serial port as set in PORT_NAMES.
         while (portEnum.hasMoreElements()) {
             CommPortIdentifier currPortId = (CommPortIdentifier) portEnum.nextElement();
-            logger.error("search corresspondig port for : "+currPortId.getName()+" with owner : "+currPortId.getCurrentOwner());
             for (String portName : PORT_NAMES) {
                 if (currPortId.getName().equals(portName)) {
                     portId = currPortId;
@@ -105,7 +104,6 @@ public class RxtxConnection {
                 }
             }
         }
-        logger.error("end of search for ports");
         if (portId == null) {
             logger.error("Could not find COM port.");
             close();
@@ -144,12 +142,10 @@ public class RxtxConnection {
                         if (!_line.equals("")) {
                             line = _line;
                         }
-                        logger.debug("valeure renvoyée : " + _line);
                     } catch (IOException e) {
                         logger.error("IO exception. Are you closing ?", e);
                     }
                 }
-                logger.debug("notification listener");
             }
         });
         serialPort.notifyOnDataAvailable(true);
