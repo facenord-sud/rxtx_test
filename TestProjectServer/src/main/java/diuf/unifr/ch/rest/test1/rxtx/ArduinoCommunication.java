@@ -6,11 +6,15 @@
 package diuf.unifr.ch.rest.test1.rxtx;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import diuf.unifr.ch.rest.test1.jaxb.AbstractComponent;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import gnu.io.UnsupportedCommOperationException;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Map;
 import java.util.TooManyListenersException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +24,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author leo
  */
-public abstract class ArduinoCommunication {
+public class ArduinoCommunication {
 
     private RxtxConnection connection;
     private final Gson gson;
@@ -38,21 +42,27 @@ public abstract class ArduinoCommunication {
             Logger.getLogger(ArduinoCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    
+
     public void write(Object o) {
         try {
             connection.getOutput().write(gson.toJson(o).getBytes());
-            logger.debug("writing to arduino : "+ gson.toJson(o));
+            logger.debug("writing to arduino : " + gson.toJson(o));
         } catch (IOException ex) {
             Logger.getLogger(ArduinoCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public abstract void setComponent(Object o);
+    public Map<String, String> read() {
+       Type mapType = new TypeToken<Map<String, String>>() {}.getType();
+        Map<String, String> map = getGson().fromJson(getConnection().getLine(), mapType);
+        return map;
+    }
 
-    public abstract <T> T getComponent();
+    public void setComponent(Object o) {
+
+    }
+
+    
 
     public RxtxConnection getConnection() {
         return connection;
@@ -65,6 +75,5 @@ public abstract class ArduinoCommunication {
     public Gson getGson() {
         return gson;
     }
-    
-    
+
 }

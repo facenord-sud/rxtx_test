@@ -9,7 +9,7 @@ package diuf.unifr.ch.rest.test1.resources;
 import diuf.unifr.ch.rest.test1.jaxb.Led;
 import diuf.unifr.ch.rest.test1.rxtx.ArduinoCommunication;
 import diuf.unifr.ch.rest.test1.rxtx.RxtxConnection;
-import diuf.unifr.ch.rest.test1.rxtx.SimpleLed;
+import diuf.unifr.ch.rest.test1.rxtx.utils.RxtxUtils;
 import java.util.logging.Level;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -34,7 +34,7 @@ public class LedResource {
     @Produces(MediaType.APPLICATION_XML)
     public Response getLed() {
         logger.debug("get");
-        Led l = new SimpleLed().getComponent();
+        Led l = new RxtxUtils().getComponent(Led.class, 9);
         return Response.ok(l).build();
     }
     
@@ -43,7 +43,7 @@ public class LedResource {
     @Consumes(MediaType.APPLICATION_XML)
     public Response setLed(Led led) {
         logger.debug("put");
-        new SimpleLed().setComponent(led);
+        new RxtxUtils().setComponent(led);
         return Response.ok(led).build();
     }
 }
