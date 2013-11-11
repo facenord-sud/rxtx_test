@@ -30,7 +30,12 @@ public enum TinkerShield {
         this.value = value;
     }
     
-    public int getValue() {
+    public int toInt() {
         return value;
+    }
+    
+    @Override
+    public String toString() {
+        return String.valueOf(value);
     }
 }
