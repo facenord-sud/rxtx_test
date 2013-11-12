@@ -11,9 +11,9 @@ package diuf.unifr.ch.rest.test1.rxtx;
  * @author leo
  */
 public enum TinkerShield {
-    o_0(11),
+    o_0(9),
     o_1(10),
-    o_2(9),
+    o_2(11),
     o_3(6),
     o_4(5),
     o_5(3),

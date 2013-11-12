@@ -10,7 +10,7 @@
   <logger name="org.atmosphere.jersey" level="INFO"/>
   <logger name="ch.unifr.diuf.softeng" level="ALL" />
  
-  <root level="INFO">
+  <root level="ALL">
     <appender-ref ref="STDOUT" />
   </root>
 </configuration>

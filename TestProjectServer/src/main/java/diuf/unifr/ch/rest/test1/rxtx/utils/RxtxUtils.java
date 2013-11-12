@@ -6,12 +6,14 @@
 
 package diuf.unifr.ch.rest.test1.rxtx.utils;
 
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import diuf.unifr.ch.rest.test1.jaxb.AbstractComponent;
 import diuf.unifr.ch.rest.test1.rxtx.ArduinoCommunication;
 import diuf.unifr.ch.rest.test1.rxtx.TinkerShield;
 import java.lang.reflect.Type;
 import java.util.Map;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -20,24 +22,25 @@ import java.util.Map;
 public class RxtxUtils {
     
     private ArduinoCommunication aCom;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(RxtxUtils.class);
     
     public RxtxUtils() {
         aCom = new ArduinoCommunication();
     }
     
     public <T> T getComponent(Class type, TinkerShield pin) {
-        Map<String, String> map = aCom.read();
-        if(!map.containsKey(pin.toString())) {
+        JsonObject jComponent = aCom.read(pin.toString());
+        if(jComponent == null) {
             return null;
         }
-        AbstractComponent ret_value = (AbstractComponent) aCom.getGson().fromJson(map.get(pin.toString()), type);
-        ret_value.setPin(pin.toInt());
+        AbstractComponent ret_value = (AbstractComponent) aCom.getGson().fromJson(jComponent, type);
+        ret_value.setPin(pin);
         return (T) type.cast(ret_value);
     }
     
     public void setComponent(AbstractComponent component) {
-        Map<String, String> map = aCom.read();
-        map.put(String.valueOf(component.getPin()), aCom.getGson().toJson(component));
-        aCom.write(component);
+        JsonObject jComponent = new JsonObject();
+        jComponent.add(component.getPin().toString(), aCom.getGson().toJsonTree(component));
+        aCom.write(jComponent);
     }
 }

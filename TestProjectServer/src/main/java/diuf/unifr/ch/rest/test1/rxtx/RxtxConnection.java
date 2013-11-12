@@ -89,7 +89,7 @@ public class RxtxConnection {
         CommPortIdentifier portId = null;
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
         logger.debug("looking for ports...");
-        if(portEnum.hasMoreElements()) {
+        if (portEnum.hasMoreElements()) {
             logger.debug("serial port(s) found on your os");
         } else {
             logger.error("No port found. Linux user: don't forget that only ports like this: /dev/ttyS* will be scanned");
@@ -141,6 +141,7 @@ public class RxtxConnection {
                         String _line = input.readLine();
                         if (!_line.equals("")) {
                             line = _line;
+                            //logger.debug("new line of arduino: " + line);
                         }
                     } catch (IOException e) {
                         logger.error("IO exception. Are you closing ?", e);

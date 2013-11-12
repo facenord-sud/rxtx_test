@@ -35,7 +35,7 @@ public class LedResource {
     @Produces(MediaType.APPLICATION_XML)
     public Response getLed() {
         logger.debug("get");
-        Led l = new RxtxUtils().getComponent(Led.class, TinkerShield.i_0);
+        Led l = new RxtxUtils().getComponent(Led.class, TinkerShield.o_1);
         return Response.ok(l).build();
     }
     
@@ -44,7 +44,7 @@ public class LedResource {
     @Consumes(MediaType.APPLICATION_XML)
     public Response setLed(Led led) {
         logger.debug("put");
-        led.setPin(TinkerShield.i_0.toInt());
+        led.setPin(TinkerShield.o_1);
         new RxtxUtils().setComponent(led);
         return Response.ok(led).build();
     }

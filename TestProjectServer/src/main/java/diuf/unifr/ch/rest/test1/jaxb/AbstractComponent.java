@@ -6,6 +6,7 @@
 
 package diuf.unifr.ch.rest.test1.jaxb;
 
+import diuf.unifr.ch.rest.test1.rxtx.TinkerShield;
 import javax.xml.bind.annotation.XmlAttribute;
 
 /**
@@ -14,14 +15,18 @@ import javax.xml.bind.annotation.XmlAttribute;
  */
 public abstract class AbstractComponent {
     
-    private int pin;
-
-    @XmlAttribute
-    public int getPin() {
+    private TinkerShield pin;
+    
+    public TinkerShield getPin() {
         return pin;
     }
+    
+    @XmlAttribute
+    public int getPinToInt() {
+        return pin.toInt();
+    }
 
-    public void setPin(int pin) {
+    public void setPin(TinkerShield pin) {
         this.pin = pin;
     }
 }

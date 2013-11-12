@@ -6,6 +6,10 @@
 package diuf.unifr.ch.rest.test1.rxtx;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import diuf.unifr.ch.rest.test1.jaxb.AbstractComponent;
 import gnu.io.PortInUseException;
@@ -43,26 +47,33 @@ public class ArduinoCommunication {
         }
     }
 
-    public void write(Object o) {
+    public void write(JsonObject o) {
         try {
-            connection.getOutput().write(gson.toJson(o).getBytes());
+            connection.getOutput().write(o.toString().getBytes());
             logger.debug("writing to arduino : " + gson.toJson(o));
         } catch (IOException ex) {
             Logger.getLogger(ArduinoCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public Map<String, String> read() {
-       Type mapType = new TypeToken<Map<String, String>>() {}.getType();
-        Map<String, String> map = getGson().fromJson(getConnection().getLine(), mapType);
-        return map;
+    public JsonObject read(String element) {
+        JsonElement jElement;
+        try {
+            jElement = new JsonParser().parse(getConnection().getLine());
+        } catch (NullPointerException e) {
+            logger.info("error during communication with arduino. Reload page", e);
+            return null;
+        } catch (JsonSyntaxException e) {
+            logger.info("error during communication with arduino. Reload page", e);
+            return null;
+        }
+        JsonObject jObject = jElement.getAsJsonObject();
+        if (!jObject.has(element)) {
+            logger.debug("'" + element + "' not found in the json string: " + jObject.toString());
+            return null;
+        }
+        return jObject.getAsJsonObject(element);
     }
-
-    public void setComponent(Object o) {
-
-    }
-
-    
 
     public RxtxConnection getConnection() {
         return connection;
